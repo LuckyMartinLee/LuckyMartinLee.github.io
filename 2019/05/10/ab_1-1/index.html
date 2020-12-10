@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  <meta name=referrer content=never>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>压力测试工具 ab (apache bench) 使用 | Martin Li&#39;s Personal Website - 李杨的个人站点</title>
+  <meta name="description" content="网络服务性能相关概念服务器平均请求处理时间（Time per request: across all concurrent requests）即是在某个并发用户数下服务器处理一条请求的平均时间 服务器平均请求处理时间 = 处理完成所有请求数所花费的时间 / 总请求数Time per request(across all concurrent requests) = Time taken for /">
+<meta name="keywords" content="Linux,Shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="压力测试工具 ab (apache bench) 使用">
+<meta property="og:url" content="http://luckymartinlee.github.io/2019/05/10/ab_1-1/index.html">
+<meta property="og:site_name" content="Martin Li&#39;s Personal Website - 李杨的个人站点">
+<meta property="og:description" content="网络服务性能相关概念服务器平均请求处理时间（Time per request: across all concurrent requests）即是在某个并发用户数下服务器处理一条请求的平均时间 服务器平均请求处理时间 = 处理完成所有请求数所花费的时间 / 总请求数Time per request(across all concurrent requests) = Time taken for /">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://luckymartinlee.github.io/post_imgs/server_performance_relations_1.png">
+<meta property="og:image" content="http://luckymartinlee.github.io/post_imgs/ab_result.png">
+<meta property="og:image" content="http://luckymartinlee.github.io/post_imgs/ab_results_2.png">
+<meta property="og:image" content="http://luckymartinlee.github.io/post_imgs/ab_results_3.png">
+<meta property="og:updated_time" content="2020-12-07T12:52:37.204Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="压力测试工具 ab (apache bench) 使用">
+<meta name="twitter:description" content="网络服务性能相关概念服务器平均请求处理时间（Time per request: across all concurrent requests）即是在某个并发用户数下服务器处理一条请求的平均时间 服务器平均请求处理时间 = 处理完成所有请求数所花费的时间 / 总请求数Time per request(across all concurrent requests) = Time taken for /">
+<meta name="twitter:image" content="http://luckymartinlee.github.io/post_imgs/server_performance_relations_1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://luckymartinlee.github.io/2019/05/10/ab_1-1/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Martin Li&#39;s Personal Website - 李杨的个人站点" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/programmer.png" type="image/x-icon">
+  
+
+  
+    <link rel="icon" type="image/png" sizes="32x32" href="/programmer_32.png">
+  
+
+  
+    <link rel="icon" type="image/png" sizes="16x16" href="/programmer_16.png">
+  
+
+  <!-- font-awesome CSS -->
+  <!-- <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+    
+    
+
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  
+<div style="display:none"><img src="/programmer_300.png"" /></div>
+
+<header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://luckymartinlee.github.io" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Martin Li</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">技术主管，大数据及后端高级研发工程师</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> 中国 上海</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav">
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-about active">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于我</span>
+          </a>
+        </li>
+        
+      </ul>
+
+    
+
+
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/LuckyMartinLee" target="_blank" title="Github" ><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" ><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+
+
+
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ES/" style="font-size: 13.4px;">ES</a> <a href="/tags/Elasticsearch/" style="font-size: 13.4px;">Elasticsearch</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/Hadoop/" style="font-size: 13.4px;">Hadoop</a> <a href="/tags/Linux/" style="font-size: 13.6px;">Linux</a> <a href="/tags/MapReduce/" style="font-size: 13px;">MapReduce</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/MySQL/" style="font-size: 13.8px;">MySQL</a> <a href="/tags/Scala/" style="font-size: 13.4px;">Scala</a> <a href="/tags/Shell/" style="font-size: 13.2px;">Shell</a> <a href="/tags/Spark/" style="font-size: 13.2px;">Spark</a> <a href="/tags/YARN/" style="font-size: 13px;">YARN</a> <a href="/tags/大数据/" style="font-size: 13.8px;">大数据</a> <a href="/tags/搜索引擎/" style="font-size: 13.4px;">搜索引擎</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/05/10/spark_1-2/" class="title">Spark 算子详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-05-10T10:13:12.000Z" itemprop="datePublished">2019-05-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/05/10/ab_1-1/" class="title">压力测试工具 ab (apache bench) 使用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-05-10T10:13:12.000Z" itemprop="datePublished">2019-05-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/13/spark_1-1/" class="title">Spark RDD的Stage划分</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-13T02:23:11.000Z" itemprop="datePublished">2018-10-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/06/22/hadoop-1-4/" class="title">Hadoop从入门到放弃(四) -- YARN</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-06-22T07:15:21.000Z" itemprop="datePublished">2018-06-22</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/06/12/hadoop-1-3/" class="title">Hadoop从入门到放弃(三) -- MapReduce</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-06-12T07:15:40.000Z" itemprop="datePublished">2018-06-12</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-ab_1-1" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      压力测试工具 ab (apache bench) 使用
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/05/10/ab_1-1/" class="article-date">
+	  <time datetime="2019-05-10T10:13:12.000Z" itemprop="datePublished">2019-05-10</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Linux/">Linux</a>, <a class="article-tag-link" href="/tags/Shell/">Shell</a>
+  </span>
+
+
+        
+
+	<span class="article-read hidden-xs">
+    	<i class="icon icon-eye-fill" aria-hidden="true"></i>
+    	<span id="/2019/05/10/ab_1-1/" class="leancloud_visitors"  data-flag-title="压力测试工具 ab (apache bench) 使用">0</span>
+    </span>
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/05/10/ab_1-1/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry markdown-body" itemprop="articleBody">
+      
+        <h2 id="网络服务性能相关概念"><a href="#网络服务性能相关概念" class="headerlink" title="网络服务性能相关概念"></a>网络服务性能相关概念</h2><h3 id="服务器平均请求处理时间（Time-per-request-across-all-concurrent-requests）"><a href="#服务器平均请求处理时间（Time-per-request-across-all-concurrent-requests）" class="headerlink" title="服务器平均请求处理时间（Time per request: across all concurrent requests）"></a>服务器平均请求处理时间（Time per request: across all concurrent requests）</h3><p>即是在某个并发用户数下服务器处理一条请求的平均时间</p>
+<p>服务器平均请求处理时间 = 处理完成所有请求数所花费的时间 / 总请求数<br>Time per request(across all concurrent requests) = Time taken for / testsComplete requests</p>
+<h3 id="用户平均请求等待时间（Time-per-request）"><a href="#用户平均请求等待时间（Time-per-request）" class="headerlink" title="用户平均请求等待时间（Time per request）"></a>用户平均请求等待时间（Time per request）</h3><p>即是用户获得相应的平均等待时间</p>
+<p>用户平均请求等待时间 = 处理完成所有请求数所花费的时间/ （总请求数 / 并发用户数），即<br>Time per request = Time taken for tests /（ Complete requests / Concurrency Level）</p>
+<h3 id="吞吐率（Requests-per-second，QPS，RPS）"><a href="#吞吐率（Requests-per-second，QPS，RPS）" class="headerlink" title="吞吐率（Requests per second，QPS，RPS）"></a>吞吐率（Requests per second，QPS，RPS）</h3><p>即是在某个并发用户数下单位时间内处理的请求数,单位是reqs/s, 也是 “服务器平均请求处理时间” d的倒数。某个并发用户数下单位时间内能处理的最大请求数，称之为最大吞吐率。</p>
+<p>吞吐率 = 总请求数 / 处理完成这些请求数所花费的时间<br>Request per second = Complete requests / Time taken for tests</p>
+<h3 id="并发连接数（The-number-of-concurrent-connections）"><a href="#并发连接数（The-number-of-concurrent-connections）" class="headerlink" title="并发连接数（The number of concurrent connections）"></a>并发连接数（The number of concurrent connections）</h3><p>即是在某个时刻服务器所接受的请求数目，就是会话数量。</p>
+<h3 id="并发用户数（The-number-of-concurrent-users，Concurrency-Level）"><a href="#并发用户数（The-number-of-concurrent-users，Concurrency-Level）" class="headerlink" title="并发用户数（The number of concurrent users，Concurrency Level）"></a>并发用户数（The number of concurrent users，Concurrency Level）</h3><p>即是指某个时刻使用系统的用户数(可能有一个用户有一个或者多个连接)。<br>要注意区分和并发连接数之间的区别，一个用户可能同时会产生多个会话，也即连接数。</p>
+<p>总结:<br>如果要说QPS时，一定需要指明是多少并发用户数下的QPS，否则豪无意义。<br>因为单用户数的40QPS和20并发用户数下的40QPS是两个不同的概念，前者说明该服务可以在一秒内串行执行40个请求，而后者说明在并发20个请求的情况下，一秒内该应用能处理40个请求。<br>当QPS相同时，越大的并发用户数，说明了网站服务并发处理能力越好。<br>对于当前的web服务器，其处理单个用户的请求肯定戳戳有余，这个时候会存在资源浪费的情况（一方面该服务器可能有多个cpu，但是只处理单个进程，另一方面，在处理一个进程中，有些阶段可能是IO阶段，这个时候会造成CPU等待，但是有没有其他请求进程可以被处理）。<br>而当并发数设置的过大时，每秒钟都会有很多请求需要处理，会造成进程（线程）频繁切换，反正真正用于处理请求的时间变少，每秒能够处理的请求数反而变少，同时用户的请求等待时间也会变大，甚至超过用户的心理底线，等待时间过长。</p>
+<p>所以在最小并发数和最大并发数之间，一定有一个最合适的并发数值，在并发数下，QPS能够达到最大。</p>
+<p>但是，这个并发并非是一个最佳的并发，因为当QPS到达最大时的并发，可能已经造成用户的等待时间变得超过了其最优值，所以对于一个系统，其最佳的并发数，一定需要结合QPS，用户的等待时间来综合确定。</p>
+<p>下面这张图是应用服务器关于并发用户数，QPS，用户平均等待时间的一张关系图，对于实际的系统，也应该是对于不同的并发数，进行多次测试，获取到这些数值后，画出这样一张图出来，以便于分析出系统的最佳并发用户数。</p>
+<p><img src="/post_imgs/server_performance_relations_1.png" alt=""><br>响应时间关系图</p>
+<h2 id="ab-简介和使用实例"><a href="#ab-简介和使用实例" class="headerlink" title="ab 简介和使用实例"></a>ab 简介和使用实例</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>ab全称为：apache bench<br>它是apache自带的压力测试工具。ab非常实用，它不仅可以对apache服务器进行网站访问压力测试，也可以对或其它类型的服务器进行压力测试。比如nginx、tomcat、IIS等。<br>我们可以直接安装apache的工具包httpd-tools。如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install httpd-tools</span><br></pre></td></tr></table></figure></p>
+<p>使用ab –V命令检测是否安装成功。如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -V</span><br></pre></td></tr></table></figure></p>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -n 100 -c 10 -H <span class="string">"token: fioj3iorm2aoi4ej"</span> -p /data/postdata.txt -T application/x-www-form-urlencoded <span class="string">"http://127.0.0.1/test"</span></span><br></pre></td></tr></table></figure>
+<p>上面命令的含义是<br>设置请求header中参数token = fioj3iorm2aoi4ej，向 <a href="http://127.0.0.1/test" target="_blank" rel="noopener">http://127.0.0.1/test</a> 地址发送POST请求，POST表单数据存放在<br>本地文件/data/postdata.txt中，其content-type格式为  application/x-www-form-urlencoded，发送的并发请求数为 10，总请求数为 100。<br>成功后返回：<br><img src="/post_imgs/ab_result.png" alt=""></p>
+<h3 id="测试结果含义"><a href="#测试结果含义" class="headerlink" title="测试结果含义"></a>测试结果含义</h3><table>
+<thead>
+<tr>
+<th>返回值名称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server Software</td>
+<td>web服务器软件及版本</td>
+</tr>
+<tr>
+<td>Server Hostname</td>
+<td>表示请求的URL中的主机部分名称</td>
+</tr>
+<tr>
+<td>Server Port</td>
+<td>被测试的Web服务器的监听端口</td>
+</tr>
+<tr>
+<td>Document Path</td>
+<td>请求的页面路径</td>
+</tr>
+<tr>
+<td>Document Length</td>
+<td>页面大小</td>
+</tr>
+<tr>
+<td>Concurrency Level</td>
+<td>并发请求数</td>
+</tr>
+<tr>
+<td>Time taken for tests</td>
+<td>整个测试持续的时间,测试总共花费的时间</td>
+</tr>
+<tr>
+<td>Complete requests</td>
+<td>完成的请求数</td>
+</tr>
+<tr>
+<td>Failed requests</td>
+<td>失败的请求数，这里的失败是指请求的连接服务器、发送数据、接收数据等环节发生异常，以及无响应后超时的情况。对于超时时间的设置可以用ab的-t参数。如果接受到的http响应数据的头信息中含有2xx以外的状态码，则会在测试结果显示另一个名为“Non-2xx responses”的统计项，用于统计这部分请求数，这些请求并不算是失败的请求。</td>
+</tr>
+<tr>
+<td>Write errors</td>
+<td>写入错误</td>
+</tr>
+<tr>
+<td>Total transferred</td>
+<td>总共传输字节数,整个场景中的网络传输量,包含http的头信息等。使用ab的-v参数即可查看详细的http头信息。</td>
+</tr>
+<tr>
+<td>HTML transferred</td>
+<td>html字节数，整个场景中的HTML内容传输量。也就是减去了Total transferred中http响应数据中头信息的长度。</td>
+</tr>
+<tr>
+<td><strong>Requests per second</strong></td>
+<td>每秒处理的请求数，服务器的吞吐量，大家最关心的指标之一</td>
+</tr>
+<tr>
+<td><strong>Time per request</strong></td>
+<td>用户平均请求等待时间，大家最关心的指标之二</td>
+</tr>
+<tr>
+<td><strong>Time per request</strong></td>
+<td>服务器平均处理时间，大家最关心的指标之三</td>
+</tr>
+<tr>
+<td>Transfer rate</td>
+<td>平均传输速率（每秒收到的速率）平均每秒网络上的流量，可以很好的说明服务器在处理能力达到限制时，其出口带宽的需求量，也可以帮助排除是否存在网络流量过大导致响应时间延长的问题。</td>
+</tr>
+</tbody>
+</table>
+<p>下面段表示网络上消耗的时间的分解<br><img src="/post_imgs/ab_results_2.png" alt=""></p>
+<p>下面这段是每个请求处理时间的分布情况，50%的处理时间在4930ms内，66%的处理时间在5008ms内…，重要的是看90%的处理时间。<br><img src="/post_imgs/ab_results_3.png" alt=""></p>
+<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><p>压力测试需要当登录怎么办？<br>1、先用账户和密码在浏览器登录后，用开发者工具找到会话的Cookie值（Session ID）记下来。<br>2、使用下面命令传入Cookie值<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab －n 100 －C key＝value http://127.0.0.1/<span class="built_in">test</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://luckymartinlee.github.io/2019/05/10/ab_1-1/" title="压力测试工具 ab (apache bench) 使用" target="_blank" rel="external">http://luckymartinlee.github.io/2019/05/10/ab_1-1/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<!-- <div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://luckymartinlee.github.io" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://luckymartinlee.github.io" target="_blank"><span class="text-dark">Martin Li</span><small class="ml-1x">技术主管，大数据及后端高级研发工程师</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div> -->
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+       
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTc5Ni8xMjMzMg==">
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+      
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/05/10/spark_1-2/" title="Spark 算子详解"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/10/13/spark_1-1/" title="Spark RDD的Stage划分"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="wechat,qq,qzone,weibo,linkedin,facebook,twitter" data-mobile-sites="wechat,qq,qzone,weibo"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<!--
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/LuckyMartinLee" target="_blank" title="Github" ><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" ><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+-->
+</footer>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+  
+    
+    
+    
+        <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+    
+    
+    
+        
+
+
+<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-min-1.2.1.js"></script>
+<script>
+AV.init({
+  appId: 'M91o0ht1SkDPElWjppEk1vP3-gzGzoHsz',
+  appKey: 'JyI4oMHuThg8NUNTB9NgN5C3'
+});
+
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+		var visitors= $('.leancloud_visitors');
+		query.greaterThanOrEqualTo("time", 0);		
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {				
+					return;
+				}
+				var data = results;
+				visitors.each(function(){
+					var url = $(this).attr('id').trim();					
+					for (var i = 0; i < data.length; i++) {
+						var object = data[i];
+						var content = object.get('time');
+						var _url = object.get('url')
+						if(url == _url){
+							$(this).text(content);
+						}
+					}
+				})
+				
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+    
+    
+        
+    
+<script defer type="text/javascript">
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+
+    if (typeof LivereTower === 'function') { return; }
+
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+
+    
+    
+
+
+
+</body>
+</html>

@@ -17,21 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Scala 函数与方法的区分与理解 | Martin Li&#39;s Personal Website - 李杨的个人站点</title>
-  <meta name="description" content="方法：12345scala&amp;gt; def add(x:Int, y: Int) = x + yadd: (x: Int, y: Int)Intscala&amp;gt; add(1, 2)res0: Int = 3 函数：1234567scala&amp;gt; val add_f = (x: Int, y: Int) =&amp;gt; x + yadd_f: (Int, Int) =&amp;gt; Int = &amp;lt;f">
-<meta name="keywords" content="Linux,Scala">
+  <title>Scala 偏函数与部分应用函数的区分与理解 | Martin Li&#39;s Personal Website - 李杨的个人站点</title>
+  <meta name="description" content="部分应用函数 (Partial Applied Function)部分应用函数是缺少部分参数的函数，是一个逻辑上概念, 比如：1def sum(x: Int)(y: Int) = x + y 当调用sum的时候，如果不提供所有的参数或某些参数还未知时，比如sum _ , sum(3)(: Int), sum(: Int)(3), 这样就生成了所谓的部分应用函数。部分应用函数只是逻辑上的一个表达，s">
+<meta name="keywords" content="Scala">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Scala 函数与方法的区分与理解">
-<meta property="og:url" content="http://luckymartinlee.github.io/2017/12/03/scala_1-3/index.html">
+<meta property="og:title" content="Scala 偏函数与部分应用函数的区分与理解">
+<meta property="og:url" content="http://luckymartinlee.github.io/2017/07/11/scala_1-3/index.html">
 <meta property="og:site_name" content="Martin Li&#39;s Personal Website - 李杨的个人站点">
-<meta property="og:description" content="方法：12345scala&amp;gt; def add(x:Int, y: Int) = x + yadd: (x: Int, y: Int)Intscala&amp;gt; add(1, 2)res0: Int = 3 函数：1234567scala&amp;gt; val add_f = (x: Int, y: Int) =&amp;gt; x + yadd_f: (Int, Int) =&amp;gt; Int = &amp;lt;f">
+<meta property="og:description" content="部分应用函数 (Partial Applied Function)部分应用函数是缺少部分参数的函数，是一个逻辑上概念, 比如：1def sum(x: Int)(y: Int) = x + y 当调用sum的时候，如果不提供所有的参数或某些参数还未知时，比如sum _ , sum(3)(: Int), sum(: Int)(3), 这样就生成了所谓的部分应用函数。部分应用函数只是逻辑上的一个表达，s">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-12-10T07:32:26.930Z">
+<meta property="og:updated_time" content="2020-12-15T09:31:22.079Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Scala 函数与方法的区分与理解">
-<meta name="twitter:description" content="方法：12345scala&amp;gt; def add(x:Int, y: Int) = x + yadd: (x: Int, y: Int)Intscala&amp;gt; add(1, 2)res0: Int = 3 函数：1234567scala&amp;gt; val add_f = (x: Int, y: Int) =&amp;gt; x + yadd_f: (Int, Int) =&amp;gt; Int = &amp;lt;f">
+<meta name="twitter:title" content="Scala 偏函数与部分应用函数的区分与理解">
+<meta name="twitter:description" content="部分应用函数 (Partial Applied Function)部分应用函数是缺少部分参数的函数，是一个逻辑上概念, 比如：1def sum(x: Int)(y: Int) = x + y 当调用sum的时候，如果不提供所有的参数或某些参数还未知时，比如sum _ , sum(3)(: Int), sum(: Int)(3), 这样就生成了所谓的部分应用函数。部分应用函数只是逻辑上的一个表达，s">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://luckymartinlee.github.io/2017/12/03/scala_1-3/index.html">
+  <link rel="canonical" href="http://luckymartinlee.github.io/2017/07/11/scala_1-3/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Martin Li&#39;s Personal Website - 李杨的个人站点" type="application/atom+xml">
   
@@ -188,7 +188,7 @@
   <div class="widget">
     <h3 class="widget-title">标签云</h3>
     <div class="widget-body tagcloud">
-      <a href="/tags/ES/" style="font-size: 13.4px;">ES</a> <a href="/tags/Elasticsearch/" style="font-size: 13.4px;">Elasticsearch</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/Hadoop/" style="font-size: 13.4px;">Hadoop</a> <a href="/tags/Linux/" style="font-size: 13.6px;">Linux</a> <a href="/tags/MapReduce/" style="font-size: 13px;">MapReduce</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/MySQL/" style="font-size: 13.8px;">MySQL</a> <a href="/tags/Scala/" style="font-size: 13.4px;">Scala</a> <a href="/tags/Shell/" style="font-size: 13.2px;">Shell</a> <a href="/tags/Spark/" style="font-size: 13.2px;">Spark</a> <a href="/tags/YARN/" style="font-size: 13px;">YARN</a> <a href="/tags/大数据/" style="font-size: 13.8px;">大数据</a> <a href="/tags/搜索引擎/" style="font-size: 13.4px;">搜索引擎</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a>
+      <a href="/tags/ES/" style="font-size: 13.4px;">ES</a> <a href="/tags/Elasticsearch/" style="font-size: 13.4px;">Elasticsearch</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/Hadoop/" style="font-size: 13.4px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 13px;">Java</a> <a href="/tags/Linux/" style="font-size: 13.2px;">Linux</a> <a href="/tags/MapReduce/" style="font-size: 13px;">MapReduce</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/MySQL/" style="font-size: 13.8px;">MySQL</a> <a href="/tags/Scala/" style="font-size: 13.6px;">Scala</a> <a href="/tags/Shell/" style="font-size: 13.2px;">Shell</a> <a href="/tags/Spark/" style="font-size: 13.2px;">Spark</a> <a href="/tags/YARN/" style="font-size: 13px;">YARN</a> <a href="/tags/大数据/" style="font-size: 13.8px;">大数据</a> <a href="/tags/搜索引擎/" style="font-size: 13.4px;">搜索引擎</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a>
     </div>
   </div>
 
@@ -197,7 +197,7 @@
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">4</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -246,6 +246,21 @@
                 
               </p>
               <p class="item-title">
+                <a href="/2019/04/11/java_1-1/" class="title">Java 线程</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-04-11T02:13:32.000Z" itemprop="datePublished">2019-04-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
                 <a href="/2018/10/13/spark_1-1/" class="title">Spark RDD的Stage划分</a>
               </p>
               <p class="item-date">
@@ -265,21 +280,6 @@
               </p>
               <p class="item-date">
                 <time datetime="2018-06-22T07:15:21.000Z" itemprop="datePublished">2018-06-22</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2018/06/12/hadoop-1-3/" class="title">Hadoop从入门到放弃(三) -- MapReduce</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2018-06-12T07:15:40.000Z" itemprop="datePublished">2018-06-12</time>
               </p>
             </div>
           </li>
@@ -304,7 +304,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Scala 函数与方法的区分与理解
+      Scala 偏函数与部分应用函数的区分与理解
     </h1>
   
 
@@ -312,15 +312,15 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2017/12/03/scala_1-3/" class="article-date">
-	  <time datetime="2017-12-03T01:33:25.000Z" itemprop="datePublished">2017-12-03</time>
+	<a href="/2017/07/11/scala_1-3/" class="article-date">
+	  <time datetime="2017-07-11T13:33:18.000Z" itemprop="datePublished">2017-07-11</time>
 	</a>
 </span>
         
         
   <span class="article-tag">
     <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/Linux/">Linux</a>, <a class="article-tag-link" href="/tags/Scala/">Scala</a>
+	<a class="article-tag-link" href="/tags/Scala/">Scala</a>
   </span>
 
 
@@ -328,19 +328,24 @@
 
 	<span class="article-read hidden-xs">
     	<i class="icon icon-eye-fill" aria-hidden="true"></i>
-    	<span id="/2017/12/03/scala_1-3/" class="leancloud_visitors"  data-flag-title="Scala 函数与方法的区分与理解">0</span>
+    	<span id="/2017/07/11/scala_1-3/" class="leancloud_visitors"  data-flag-title="Scala 偏函数与部分应用函数的区分与理解">0</span>
     </span>
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2017/12/03/scala_1-3/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2017/07/11/scala_1-3/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
     <div class="article-entry markdown-body" itemprop="articleBody">
       
-        <p>方法：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; def add(x:Int, y: Int) = x + y</span><br><span class="line">add: (x: Int, y: Int)Int</span><br><span class="line"></span><br><span class="line">scala&gt; add(1, 2)</span><br><span class="line">res0: Int = 3</span><br></pre></td></tr></table></figure></p>
-<p>函数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val add_f = (x: Int, y: Int) =&gt; x + y</span><br><span class="line">add_f: (Int, Int) =&gt; Int = &lt;function2&gt;</span><br><span class="line"></span><br><span class="line">// 根据内容可以看出add_f是一个函数Function</span><br><span class="line"></span><br><span class="line">scala&gt; add_f(1, 2)</span><br><span class="line">res1: Int = 3</span><br></pre></td></tr></table></figure></p>
-<p>上面 ‘=’号右边的内容 (x: Int, y: Int) =&gt; x + y是一个函数体，<br>方法只能用 def 接收，函数可以用 def 接收，也可以用 val 接收。<br>当函数用 def 来接收之后，不再显示为 function ，转换为方法。<br>方法可以省略参数，函数不可以。 函数可以作为方法的参数。 看下面的例子：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val a = () =&gt; 100</span><br><span class="line">a: () =&gt; Int = &lt;function0&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; val a = =&gt; 100</span><br><span class="line">&lt;console&gt;:1: error: illegal start of simple expression</span><br></pre></td></tr></table></figure></p>
-<p>看这里: val a = =&gt; 100 // 当函数参数为空时报错</p>
+        <h3 id="部分应用函数-Partial-Applied-Function"><a href="#部分应用函数-Partial-Applied-Function" class="headerlink" title="部分应用函数 (Partial Applied Function)"></a>部分应用函数 (Partial Applied Function)</h3><p>部分应用函数是缺少部分参数的函数，是一个逻辑上概念, 比如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">def sum(x: Int)(y: Int) = x + y</span><br></pre></td></tr></table></figure></p>
+<p>当调用sum的时候，如果不提供所有的参数或某些参数还未知时，比如sum _ , sum(3)(<em>: Int), sum(</em>: Int)(3), 这样就生成了所谓的部分应用函数。部分应用函数只是逻辑上的一个表达，scala编译器会用Function1， Function2这些类来表示它.  </p>
+<h3 id="偏函数-Partial-Function"><a href="#偏函数-Partial-Function" class="headerlink" title="偏函数 Partial Function"></a>偏函数 Partial Function</h3><p>偏函数是只对函数定义域的一个子集进行定义的函数, 对于这个参数范围外的参数则抛出异常，这样的函数就是偏函数（顾名思异就是这个函数只处理传入来的部分参数）。 scala中用scala.PartialFunction[T,S] Trait 来表示,其中接收一个类型为 T 的参数，返回一个类型为 S 的结果。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">val signal: PartialFunction[Int, Int] = &#123;</span><br><span class="line">    <span class="keyword">case</span> x <span class="keyword">if</span> x &gt;= 1 =&gt; 1</span><br><span class="line">    <span class="keyword">case</span> x <span class="keyword">if</span> x &lt;= -1 =&gt; -1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个signal所引用的函数除了0值外，对所有整数都定义了相应的操作。 signal(0) 会抛出异常，因此使用前最好先signal.isDefinedAt(0)判断一下。 偏函数主要用于这样一种场景：对某些值现在还无法给出具体的操作（即需求还不明朗），也有可能存在几种处理方式（视乎具体的需求）；我们可以先对需求明确的部分进行定义，比如上述除了0外的所有整数域，然后根据具体情况补充对其他域的定义，比如 :<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">val composed_signal: PartialFunction[Int,Int] = signal.orElse&#123;</span><br><span class="line"><span class="keyword">case</span> 0 =&gt; 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">composed_signal(0)  // 返回 0</span><br></pre></td></tr></table></figure></p>
+<p>或者对定义域进行一定的偏移（假如需求做了变更,  1 为无效的点）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">val new_signal: Function1[Int, Int] = signal.compose&#123;</span><br><span class="line">  <span class="keyword">case</span> x =&gt; x  - 1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">new_signal(1)  // throw exception</span><br><span class="line">new_signal(0)   // 返回 -1 </span><br><span class="line">new_signal(2)  // 返回 1</span><br></pre></td></tr></table></figure>
+<p>还可以用andThen将两个相关的偏函数串接起来<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">val another_signal: PartialFunction[Int, Int] = &#123;</span><br><span class="line">   <span class="keyword">case</span> 0 =&gt;  0</span><br><span class="line">   <span class="keyword">case</span> x <span class="keyword">if</span> x &gt; 0 =&gt; x - 1 </span><br><span class="line">   <span class="keyword">case</span> x <span class="keyword">if</span> x &lt; 0 =&gt; x + 1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">val then_signal =  another_signal andThen  signal</span><br><span class="line"></span><br><span class="line">then_signal(0) // throw exception</span><br><span class="line">then_signal(-1) // throw exception</span><br><span class="line">then_signal(1) // throw exception</span><br><span class="line">then_signal(2) // 返回 1</span><br><span class="line">then_signal(-2) // 返回 -1</span><br></pre></td></tr></table></figure></p>
+<p>这里的then_signal 剔除了-1, 0, 1三个点的定义</p>
 
       
     </div>
@@ -350,7 +355,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://luckymartinlee.github.io/2017/12/03/scala_1-3/" title="Scala 函数与方法的区分与理解" target="_blank" rel="external">http://luckymartinlee.github.io/2017/12/03/scala_1-3/</a>
+      <a href="http://luckymartinlee.github.io/2017/07/11/scala_1-3/" title="Scala 偏函数与部分应用函数的区分与理解" target="_blank" rel="external">http://luckymartinlee.github.io/2017/07/11/scala_1-3/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -401,12 +406,12 @@
   <ul class="pager pull-left">
     
     <li class="prev">
-      <a href="/2018/01/26/elasticsearch_1-1/" title="Elasticsearch从入门到放弃(一) -- 基本概念"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+      <a href="/2017/10/23/scala_1-1/" title="Scala 柯里化(curry) 深入理解"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
     </li>
     
     
     <li class="next">
-      <a href="/2017/12/03/inverted_index_1/" title="什么是倒排索引"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2017/04/20/curl_1-1/" title="curl 工具使用"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     

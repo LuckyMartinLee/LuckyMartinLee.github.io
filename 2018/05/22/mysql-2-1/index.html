@@ -17,18 +17,18 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>MySQL查询优化(一) | Martin Li&#39;s Personal Website - 李杨的个人站点</title>
+  <title>MySQL -- 查询优化 一 | Martin Li&#39;s Personal Website - 李杨的个人站点</title>
   <meta name="description" content="索引建立技巧单个字段 “等于” 查询形如:1SELECT * FROM `tabel1` WHERE `f1` = 15 这种情况下，毫无疑问，需要给字段 (f1) 加上索引。 形如:1SELECT `f2`,`f3` FROM `tabel1` WHERE `f1` = 15 此时应该创建 (f1,f2,f3) 索引，此索引起到覆盖索引的作用，效率比 (f1) 索引高。切记，不应该创建 (f2,">
-<meta name="keywords" content="MySQL,数据库">
+<meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL查询优化(一)">
+<meta property="og:title" content="MySQL -- 查询优化 一">
 <meta property="og:url" content="http://luckymartinlee.github.io/2018/05/22/mysql-2-1/index.html">
 <meta property="og:site_name" content="Martin Li&#39;s Personal Website - 李杨的个人站点">
 <meta property="og:description" content="索引建立技巧单个字段 “等于” 查询形如:1SELECT * FROM `tabel1` WHERE `f1` = 15 这种情况下，毫无疑问，需要给字段 (f1) 加上索引。 形如:1SELECT `f2`,`f3` FROM `tabel1` WHERE `f1` = 15 此时应该创建 (f1,f2,f3) 索引，此索引起到覆盖索引的作用，效率比 (f1) 索引高。切记，不应该创建 (f2,">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-25T03:31:30.000Z">
+<meta property="og:updated_time" content="2021-01-03T07:11:18.575Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL查询优化(一)">
+<meta name="twitter:title" content="MySQL -- 查询优化 一">
 <meta name="twitter:description" content="索引建立技巧单个字段 “等于” 查询形如:1SELECT * FROM `tabel1` WHERE `f1` = 15 这种情况下，毫无疑问，需要给字段 (f1) 加上索引。 形如:1SELECT `f2`,`f3` FROM `tabel1` WHERE `f1` = 15 此时应该创建 (f1,f2,f3) 索引，此索引起到覆盖索引的作用，效率比 (f1) 索引高。切记，不应该创建 (f2,">
   <!-- Canonical links -->
   <link rel="canonical" href="http://luckymartinlee.github.io/2018/05/22/mysql-2-1/index.html">
@@ -188,7 +188,7 @@
   <div class="widget">
     <h3 class="widget-title">标签云</h3>
     <div class="widget-body tagcloud">
-      <a href="/tags/Elasticsearch/" style="font-size: 13.6px;">Elasticsearch</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/Hadoop/" style="font-size: 13.4px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 13.4px;">Java</a> <a href="/tags/Linux/" style="font-size: 13.2px;">Linux</a> <a href="/tags/MapReduce/" style="font-size: 13px;">MapReduce</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/MySQL/" style="font-size: 13.8px;">MySQL</a> <a href="/tags/Scala/" style="font-size: 13.6px;">Scala</a> <a href="/tags/Shell/" style="font-size: 13.2px;">Shell</a> <a href="/tags/Spark/" style="font-size: 13.2px;">Spark</a> <a href="/tags/YARN/" style="font-size: 13px;">YARN</a> <a href="/tags/大数据/" style="font-size: 13.8px;">大数据</a> <a href="/tags/搜索引擎/" style="font-size: 13px;">搜索引擎</a> <a href="/tags/数据库/" style="font-size: 14px;">数据库</a>
+      <a href="/tags/Elasticsearch/" style="font-size: 13.6px;">Elasticsearch</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/Hadoop/" style="font-size: 13.4px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 14px;">Java</a> <a href="/tags/Js/" style="font-size: 13px;">Js</a> <a href="/tags/Laravel/" style="font-size: 13px;">Laravel</a> <a href="/tags/Linux/" style="font-size: 13.2px;">Linux</a> <a href="/tags/MapReduce/" style="font-size: 13px;">MapReduce</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/MySQL/" style="font-size: 14px;">MySQL</a> <a href="/tags/PHP/" style="font-size: 13px;">PHP</a> <a href="/tags/RabbitMQ/" style="font-size: 13px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 13px;">Redis</a> <a href="/tags/Scala/" style="font-size: 13.6px;">Scala</a> <a href="/tags/Shell/" style="font-size: 13.2px;">Shell</a> <a href="/tags/Spark/" style="font-size: 13.2px;">Spark</a> <a href="/tags/YARN/" style="font-size: 13px;">YARN</a> <a href="/tags/大数据/" style="font-size: 13.8px;">大数据</a> <a href="/tags/搜索引擎/" style="font-size: 13px;">搜索引擎</a> <a href="/tags/数据库/" style="font-size: 13.2px;">数据库</a> <a href="/tags/网络安全/" style="font-size: 13.2px;">网络安全</a>
     </div>
   </div>
 
@@ -197,7 +197,7 @@
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">4</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -209,6 +209,51 @@
     <div class="widget-body">
       <ul class="recent-post-list list-unstyled no-thumbnail">
         
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/14/java_1-5/" class="title">Java IO流详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-14T06:16:21.000Z" itemprop="datePublished">2020-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/14/java_1-6/" class="title">Java http协议与网络基础一</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-14T06:16:21.000Z" itemprop="datePublished">2020-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/14/java_1-7/" class="title">Java 性能优化的若干原则</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-14T06:16:21.000Z" itemprop="datePublished">2020-03-14</time>
+              </p>
+            </div>
+          </li>
+          
           <li>
             
             <div class="item-inner">
@@ -231,55 +276,10 @@
                 
               </p>
               <p class="item-title">
-                <a href="/2019/09/21/java_1-2/" class="title">Java 反射 Reflect</a>
+                <a href="/2019/09/21/java_1-4/" class="title">Java 反射 Reflect</a>
               </p>
               <p class="item-date">
                 <time datetime="2019-09-21T06:33:32.000Z" itemprop="datePublished">2019-09-21</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2019/05/10/spark_1-2/" class="title">Spark 算子详解</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2019-05-10T10:13:12.000Z" itemprop="datePublished">2019-05-10</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2019/05/10/ab_1-1/" class="title">压力测试工具 ab (apache bench) 使用</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2019-05-10T10:13:12.000Z" itemprop="datePublished">2019-05-10</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2019/04/11/java_1-1/" class="title">Java 线程</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2019-04-11T02:13:32.000Z" itemprop="datePublished">2019-04-11</time>
               </p>
             </div>
           </li>
@@ -304,7 +304,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      MySQL查询优化(一)
+      MySQL -- 查询优化 一
     </h1>
   
 
@@ -320,7 +320,7 @@
         
   <span class="article-tag">
     <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/MySQL/">MySQL</a>, <a class="article-tag-link" href="/tags/数据库/">数据库</a>
+	<a class="article-tag-link" href="/tags/MySQL/">MySQL</a>
   </span>
 
 
@@ -328,7 +328,7 @@
 
 	<span class="article-read hidden-xs">
     	<i class="icon icon-eye-fill" aria-hidden="true"></i>
-    	<span id="/2018/05/22/mysql-2-1/" class="leancloud_visitors"  data-flag-title="MySQL查询优化(一)">0</span>
+    	<span id="/2018/05/22/mysql-2-1/" class="leancloud_visitors"  data-flag-title="MySQL -- 查询优化 一">0</span>
     </span>
 
         <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/05/22/mysql-2-1/#comments" class="article-comment-link">评论</a></span>
@@ -364,7 +364,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://luckymartinlee.github.io/2018/05/22/mysql-2-1/" title="MySQL查询优化(一)" target="_blank" rel="external">http://luckymartinlee.github.io/2018/05/22/mysql-2-1/</a>
+      <a href="http://luckymartinlee.github.io/2018/05/22/mysql-2-1/" title="MySQL -- 查询优化 一" target="_blank" rel="external">http://luckymartinlee.github.io/2018/05/22/mysql-2-1/</a>
     </li>
     
     <li class="post-copyright-license">

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  <meta name=referrer content=never>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Java 集合基础 | Martin Li&#39;s Personal Website - 李杨的个人站点</title>
+  <meta name="description" content="简介集合：集合是Java中提供的一种容器，可以用来存储多个数据。集合和数组的区别：（1）数组长度的是固定的，集合的长度是可变的。（2）数组中存储的都是同一类型的元素。集合存储的都是对象，对象的类型可以不一致。Java集合类主要由两个根接口Collection和Map派生出来的。Collection有三个子接口： List、Set、Queue（Java5新增的队列）。Java集合大致也可分成List">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 集合基础">
+<meta property="og:url" content="http://luckymartinlee.github.io/2019/04/21/java_1-2/index.html">
+<meta property="og:site_name" content="Martin Li&#39;s Personal Website - 李杨的个人站点">
+<meta property="og:description" content="简介集合：集合是Java中提供的一种容器，可以用来存储多个数据。集合和数组的区别：（1）数组长度的是固定的，集合的长度是可变的。（2）数组中存储的都是同一类型的元素。集合存储的都是对象，对象的类型可以不一致。Java集合类主要由两个根接口Collection和Map派生出来的。Collection有三个子接口： List、Set、Queue（Java5新增的队列）。Java集合大致也可分成List">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://luckymartinlee.github.io/post_imgs/java_1-2-1.png">
+<meta property="og:image" content="http://luckymartinlee.github.io/post_imgs/java_1-2-2.png">
+<meta property="og:updated_time" content="2020-12-27T10:05:07.709Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 集合基础">
+<meta name="twitter:description" content="简介集合：集合是Java中提供的一种容器，可以用来存储多个数据。集合和数组的区别：（1）数组长度的是固定的，集合的长度是可变的。（2）数组中存储的都是同一类型的元素。集合存储的都是对象，对象的类型可以不一致。Java集合类主要由两个根接口Collection和Map派生出来的。Collection有三个子接口： List、Set、Queue（Java5新增的队列）。Java集合大致也可分成List">
+<meta name="twitter:image" content="http://luckymartinlee.github.io/post_imgs/java_1-2-1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://luckymartinlee.github.io/2019/04/21/java_1-2/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Martin Li&#39;s Personal Website - 李杨的个人站点" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/programmer.png" type="image/x-icon">
+  
+
+  
+    <link rel="icon" type="image/png" sizes="32x32" href="/programmer_32.png">
+  
+
+  
+    <link rel="icon" type="image/png" sizes="16x16" href="/programmer_16.png">
+  
+
+  <!-- font-awesome CSS -->
+  <!-- <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+    
+    
+
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  
+<div style="display:none"><img src="/programmer_300.png"" /></div>
+
+<header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://luckymartinlee.github.io" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Martin Li</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">技术主管，大数据及后端高级研发工程师</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> 中国 上海</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav">
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-about active">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于我</span>
+          </a>
+        </li>
+        
+      </ul>
+
+    
+
+
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/LuckyMartinLee" target="_blank" title="Github" ><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" ><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+
+
+
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Elasticsearch/" style="font-size: 13.6px;">Elasticsearch</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/Hadoop/" style="font-size: 13.4px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 14px;">Java</a> <a href="/tags/Js/" style="font-size: 13px;">Js</a> <a href="/tags/Laravel/" style="font-size: 13px;">Laravel</a> <a href="/tags/Linux/" style="font-size: 13.2px;">Linux</a> <a href="/tags/MapReduce/" style="font-size: 13px;">MapReduce</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/MySQL/" style="font-size: 14px;">MySQL</a> <a href="/tags/PHP/" style="font-size: 13px;">PHP</a> <a href="/tags/RabbitMQ/" style="font-size: 13px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 13px;">Redis</a> <a href="/tags/Scala/" style="font-size: 13.6px;">Scala</a> <a href="/tags/Shell/" style="font-size: 13.2px;">Shell</a> <a href="/tags/Spark/" style="font-size: 13.2px;">Spark</a> <a href="/tags/YARN/" style="font-size: 13px;">YARN</a> <a href="/tags/大数据/" style="font-size: 13.8px;">大数据</a> <a href="/tags/搜索引擎/" style="font-size: 13px;">搜索引擎</a> <a href="/tags/数据库/" style="font-size: 13.2px;">数据库</a> <a href="/tags/网络安全/" style="font-size: 13.2px;">网络安全</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/14/java_1-5/" class="title">Java IO流详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-14T06:16:21.000Z" itemprop="datePublished">2020-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/14/java_1-6/" class="title">Java http协议与网络基础一</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-14T06:16:21.000Z" itemprop="datePublished">2020-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/14/java_1-7/" class="title">Java 性能优化的若干原则</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-14T06:16:21.000Z" itemprop="datePublished">2020-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/11/java_1-3/" class="title">Java 内存模型和参数优化</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-11T13:46:24.000Z" itemprop="datePublished">2020-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/09/21/java_1-4/" class="title">Java 反射 Reflect</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-09-21T06:33:32.000Z" itemprop="datePublished">2019-09-21</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-java_1-2" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java 集合基础
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/04/21/java_1-2/" class="article-date">
+	  <time datetime="2019-04-21T07:02:38.000Z" itemprop="datePublished">2019-04-21</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Java/">Java</a>
+  </span>
+
+
+        
+
+	<span class="article-read hidden-xs">
+    	<i class="icon icon-eye-fill" aria-hidden="true"></i>
+    	<span id="/2019/04/21/java_1-2/" class="leancloud_visitors"  data-flag-title="Java 集合基础">0</span>
+    </span>
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/04/21/java_1-2/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry markdown-body" itemprop="articleBody">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>集合：集合是Java中提供的一种容器，可以用来存储多个数据。<br>集合和数组的区别：<br>（1）数组长度的是固定的，集合的长度是可变的。<br>（2）数组中存储的都是同一类型的元素。集合存储的都是对象，对象的类型可以不一致。<br>Java集合类主要由两个根接口Collection和Map派生出来的。Collection有三个子接口： List、Set、Queue（Java5新增的队列）。Java集合大致也可分成List、Set、Queue、Map四种接口体系，注意：Map不是Collection的子接口。<br>Collection接口：单列数据，定义了存取一组对象的方法的集合。<br>Map接口：双列数据，保存具有映射关系“key-value”对。</p>
+<p><img src="/post_imgs/java_1-2-1.png" alt=""><br><img src="/post_imgs/java_1-2-2.png" alt=""></p>
+<h2 id="Collection子接口：List接口"><a href="#Collection子接口：List接口" class="headerlink" title="Collection子接口：List接口"></a>Collection子接口：List接口</h2><p>List集合类中元素有序、且可重复，集合中的每个元素都有其对应的顺序索引。List集合默认按照元素的添加顺序设置元素的索引，可以通过索引（类似数组的下标）来访问指定位置的集合元素。</p>
+<p>List接口的实现类主要有：ArrayList、LinkedList和Vector<br>ArrayList: 有序，元素可重复，线程不安全。它是一个动态数组，允许任何符合规则的元素插入包括null。 它能快速随机访问存储的元素，支持随机访问，查询速度快，增删元素慢。</p>
+<p>LinkedList: 有序，元素可重复，线程不安全。可以根据索引访问集合元素外，LinkedList还实现了Deque接口。内部以链表的形式保存集合中的元素，所以随机访问集合中的元素性能较差，但在频繁的插入或删除元素时有较好的性能，线程不安全。</p>
+<p>Vector: 有序，元素可重复，线程安全。大多数操作与ArrayList相同，区别之处在于Vector是线程安全的，属于强同步类。因此开销就比ArrayList要大，访问要慢。大多数清空下使用 ArrayList而不是Vector,因为同步完全可以由自己来控制。Vector每次扩容请求其大小的2倍空间，而ArrayList是1.5倍。Vector还有一个子类Stack。</p>
+<h2 id="Collection子接口：Set接口"><a href="#Collection子接口：Set接口" class="headerlink" title="Collection子接口：Set接口"></a>Collection子接口：Set接口</h2><p>Set集合不允许包含相同的元素，如果试把两个相同的元素加入同一个Set集合中，则会添加操作失败。<br>Set集合判断两个对象是否相同是根据 equals() 方法，而不是使用 == 运算符。</p>
+<p>HashSet： 无序，元素不可重复，线程不安全。按Hash算法来存储集合中的元素，因此具有很好的存取、查找、删除性能。<br>特点：<br>1、 不能保证元素的排列顺序<br>2、 HashSet不是线程安全的<br>3、 集合元素可以是null</p>
+<p>HashSet集合判断两个元素相等的标准：两个对象通过 hashCode() 方法比较相等，并且两个对象的 equals() 方法返回值也相等。<br>对于存放在Set容器中的对象，对应的类一定要重写equals()和hashCode(Object obj)方法，以实现对象相等规则。</p>
+<p>LinkedHashSet： 有序，元素不可重复，线程不安全。它是HashSet的子类，它也是根据元素的hashCode值来决定元素的存储位置。但它同时使用双向链表维护元素的次序，元素的顺序与添加顺序一致。<br>由于LinkedHashSet需要维护元素的插入顺序，因此性能略低于HashSet，但在迭代访问Set里的全部元素时有很好的性能。<br>LinkedHashSet不允许集合元素重复。</p>
+<p>TreeSet： 有序（非输入顺序），元素不可重复，线程不安全。它是SortedSet接口的实现类，TreeSet可以确保集合元素处于排序状态。<br>如果试图把一个对象添加到TreeSet时，则该对象的类必须实现Comparable接口。<br>TreeSet底层使用红黑树结构存储数据元素。</p>
+<p>TreeSet两种排序方法：自然排序和定制排序。默认情况下，TreeSet采用自然排序。</p>
+<h2 id="Map接口"><a href="#Map接口" class="headerlink" title="Map接口"></a>Map接口</h2><p>Map与Collection并列存在。用于保存具有映射关系的数据:key-value<br>Map中的key和value都可以是任何引用类型的数据<br>Map中的key用Set来存放，不允许重复，即同一个Map对象所对应的类，须重写hashCode()和equals()方法</p>
+<p>HashMap： 无序，元素不可重复，线程不安全。它是Map接口使用频率最高的实现类。允许使用null键和null值，与HashSet一样，不保证映射的顺序。<br>HashMap判断两个key相等的标准是：两个key通过equals() 方法返回true， hashCode值也相等。<br>HashMap判断两个value相等的标准是：两个value通过equals()方法返回true。<br>HashMap可以使用null值为key或value</p>
+<p>LinkedHashMap： 有序，元素不可重复，线程不安全。它是 HashMap的子类，在HashMap存储结构的基础上，使用了一对双向链表来记录添加元素的顺序。 该链表负责维护Map的迭代顺序，与插入顺序一致，因此性能比HashMap低，但在迭代访问Map里的全部元素时有较好的性能。</p>
+<p>TreeMap： 有序（非输入顺序），元素不可重复，线程不安全。它是根据key-value对进行排序。TreeMap可以保证所有的Key-Value对处于有序状态。底层采用红黑树的数据结构。<br>TreeMap也有两种排序方式，自然排序和定制排序。</p>
+<p>Hashtable： 无序，元素不可重复，线程安全。<br>它不允许使用null作为key和value。<br>Hashtable实现原理和HashMap相同，底层都使用哈希表结构，查询速度快。<br>Hashtable和HashMap一样也不能保证其中Key-Value对的顺序。</p>
+<p>Properties： 无序，元素不可重复，线程安全。它是Hashtable 的子类，该对象用于处理属性文件。<br>由于属性文件里的key、value都是字符串类型，所以Properties里的key和value都是字符串类型 。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://luckymartinlee.github.io/2019/04/21/java_1-2/" title="Java 集合基础" target="_blank" rel="external">http://luckymartinlee.github.io/2019/04/21/java_1-2/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<!-- <div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://luckymartinlee.github.io" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://luckymartinlee.github.io" target="_blank"><span class="text-dark">Martin Li</span><small class="ml-1x">技术主管，大数据及后端高级研发工程师</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div> -->
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+       
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTc5Ni8xMjMzMg==">
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+      
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/05/10/ab_1-1/" title="压力测试工具 ab (apache bench) 使用"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/04/11/java_1-1/" title="Java 线程"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="wechat,qq,qzone,weibo,linkedin,facebook,twitter" data-mobile-sites="wechat,qq,qzone,weibo"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<!--
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/LuckyMartinLee" target="_blank" title="Github" ><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" ><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+-->
+</footer>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+  
+    
+    
+    
+        <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+    
+    
+    
+        
+
+
+<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-min-1.2.1.js"></script>
+<script>
+AV.init({
+  appId: 'M91o0ht1SkDPElWjppEk1vP3-gzGzoHsz',
+  appKey: 'JyI4oMHuThg8NUNTB9NgN5C3'
+});
+
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+		var visitors= $('.leancloud_visitors');
+		query.greaterThanOrEqualTo("time", 0);		
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {				
+					return;
+				}
+				var data = results;
+				visitors.each(function(){
+					var url = $(this).attr('id').trim();					
+					for (var i = 0; i < data.length; i++) {
+						var object = data[i];
+						var content = object.get('time');
+						var _url = object.get('url')
+						if(url == _url){
+							$(this).text(content);
+						}
+					}
+				})
+				
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+    
+    
+        
+    
+<script defer type="text/javascript">
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+
+    if (typeof LivereTower === 'function') { return; }
+
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+
+    
+    
+
+
+
+</body>
+</html>

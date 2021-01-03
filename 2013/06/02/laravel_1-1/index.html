@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  <meta name=referrer content=never>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Laravel 框架 重难点 | Martin Li&#39;s Personal Website - 李杨的个人站点</title>
+  <meta name="description" content="Facade以数据库访问为实例，如：1$users = DB::connection(&apos;foo&apos;)-&amp;gt;select(...); Facade 实现原理IOC容器是 Laravel 框架的最最重要的部分。它提供了两个功能，IOC和容器。IOC(Inversion of Control)，也叫控制反转。说白了，就是控制对象的生成，使开发者不用关心对象的如何生成，只需要关心它的使用即可。而通过IO">
+<meta name="keywords" content="Laravel,PHP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 框架 重难点">
+<meta property="og:url" content="http://luckymartinlee.github.io/2013/06/02/laravel_1-1/index.html">
+<meta property="og:site_name" content="Martin Li&#39;s Personal Website - 李杨的个人站点">
+<meta property="og:description" content="Facade以数据库访问为实例，如：1$users = DB::connection(&apos;foo&apos;)-&amp;gt;select(...); Facade 实现原理IOC容器是 Laravel 框架的最最重要的部分。它提供了两个功能，IOC和容器。IOC(Inversion of Control)，也叫控制反转。说白了，就是控制对象的生成，使开发者不用关心对象的如何生成，只需要关心它的使用即可。而通过IO">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-01-03T08:35:08.547Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 框架 重难点">
+<meta name="twitter:description" content="Facade以数据库访问为实例，如：1$users = DB::connection(&apos;foo&apos;)-&amp;gt;select(...); Facade 实现原理IOC容器是 Laravel 框架的最最重要的部分。它提供了两个功能，IOC和容器。IOC(Inversion of Control)，也叫控制反转。说白了，就是控制对象的生成，使开发者不用关心对象的如何生成，只需要关心它的使用即可。而通过IO">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://luckymartinlee.github.io/2013/06/02/laravel_1-1/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Martin Li&#39;s Personal Website - 李杨的个人站点" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/programmer.png" type="image/x-icon">
+  
+
+  
+    <link rel="icon" type="image/png" sizes="32x32" href="/programmer_32.png">
+  
+
+  
+    <link rel="icon" type="image/png" sizes="16x16" href="/programmer_16.png">
+  
+
+  <!-- font-awesome CSS -->
+  <!-- <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+    
+    
+
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  
+<div style="display:none"><img src="/programmer_300.png"" /></div>
+
+<header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://luckymartinlee.github.io" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Martin Li</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">技术主管，大数据及后端高级研发工程师</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> 中国 上海</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav">
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        
+        <li class="menu-item menu-item-about active">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于我</span>
+          </a>
+        </li>
+        
+      </ul>
+
+    
+
+
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/LuckyMartinLee" target="_blank" title="Github" ><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" ><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+
+
+
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Elasticsearch/" style="font-size: 13.6px;">Elasticsearch</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/Hadoop/" style="font-size: 13.4px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 14px;">Java</a> <a href="/tags/Js/" style="font-size: 13px;">Js</a> <a href="/tags/Laravel/" style="font-size: 13px;">Laravel</a> <a href="/tags/Linux/" style="font-size: 13.2px;">Linux</a> <a href="/tags/MapReduce/" style="font-size: 13px;">MapReduce</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/MySQL/" style="font-size: 14px;">MySQL</a> <a href="/tags/PHP/" style="font-size: 13px;">PHP</a> <a href="/tags/RabbitMQ/" style="font-size: 13px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 13px;">Redis</a> <a href="/tags/Scala/" style="font-size: 13.6px;">Scala</a> <a href="/tags/Shell/" style="font-size: 13.2px;">Shell</a> <a href="/tags/Spark/" style="font-size: 13.2px;">Spark</a> <a href="/tags/YARN/" style="font-size: 13px;">YARN</a> <a href="/tags/大数据/" style="font-size: 13.8px;">大数据</a> <a href="/tags/搜索引擎/" style="font-size: 13px;">搜索引擎</a> <a href="/tags/数据库/" style="font-size: 13.2px;">数据库</a> <a href="/tags/网络安全/" style="font-size: 13.2px;">网络安全</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/14/java_1-5/" class="title">Java IO流详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-14T06:16:21.000Z" itemprop="datePublished">2020-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/14/java_1-6/" class="title">Java http协议与网络基础一</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-14T06:16:21.000Z" itemprop="datePublished">2020-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/14/java_1-7/" class="title">Java 性能优化的若干原则</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-14T06:16:21.000Z" itemprop="datePublished">2020-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/03/11/java_1-3/" class="title">Java 内存模型和参数优化</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-03-11T13:46:24.000Z" itemprop="datePublished">2020-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/09/21/java_1-4/" class="title">Java 反射 Reflect</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-09-21T06:33:32.000Z" itemprop="datePublished">2019-09-21</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-laravel_1-1" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Laravel 框架 重难点
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2013/06/02/laravel_1-1/" class="article-date">
+	  <time datetime="2013-06-02T02:15:21.000Z" itemprop="datePublished">2013-06-02</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Laravel/">Laravel</a>, <a class="article-tag-link" href="/tags/PHP/">PHP</a>
+  </span>
+
+
+        
+
+	<span class="article-read hidden-xs">
+    	<i class="icon icon-eye-fill" aria-hidden="true"></i>
+    	<span id="/2013/06/02/laravel_1-1/" class="leancloud_visitors"  data-flag-title="Laravel 框架 重难点">0</span>
+    </span>
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2013/06/02/laravel_1-1/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry markdown-body" itemprop="articleBody">
+      
+        <h2 id="Facade"><a href="#Facade" class="headerlink" title="Facade"></a>Facade</h2><p>以数据库访问为实例，如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$users</span> = DB::connection(<span class="string">'foo'</span>)-&gt;select(...);</span><br></pre></td></tr></table></figure></p>
+<p>Facade 实现原理<br>IOC容器是 Laravel 框架的最最重要的部分。它提供了两个功能，IOC和容器。<br>IOC(Inversion of Control)，也叫控制反转。说白了，就是控制对象的生成，使开发者不用关心对象的如何生成，只需要关心它的使用即可。<br>而通过IOC机制生成的对象实例需要一个存放的位置，以便之后继续使用，便是它的容器功能。<br>关于IOC容器，需要记住两点即可：<br>1、 根据配置生成对象实例；<br>2、 保存对象实例，方便随时取用；</p>
+<p>看下面简化后的源码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">namespace facades;</span><br><span class="line"></span><br><span class="line">abstract class Facade</span><br><span class="line">&#123;</span><br><span class="line">    protected static <span class="variable">$app</span>;</span><br><span class="line"></span><br><span class="line">    /** </span><br><span class="line">     * Set the application instance.</span><br><span class="line">     *</span><br><span class="line">     * @param  \Illuminate\Contracts\Foundation\Application  <span class="variable">$app</span></span><br><span class="line">     * @<span class="built_in">return</span> void</span><br><span class="line">     */</span><br><span class="line">    public static <span class="keyword">function</span> setFacadeApplication(<span class="variable">$app</span>)</span><br><span class="line">    &#123;   </span><br><span class="line">        static::<span class="variable">$app</span> = <span class="variable">$app</span>;</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    /** </span><br><span class="line">     * Get the registered name of the component.</span><br><span class="line">     *</span><br><span class="line">     * @<span class="built_in">return</span> string</span><br><span class="line">     *</span><br><span class="line">     * @throws \RuntimeException</span><br><span class="line">     */</span><br><span class="line">    protected static <span class="keyword">function</span> getFacadeAccessor()</span><br><span class="line">    &#123;</span><br><span class="line">        throw new RuntimeException(<span class="string">'Facade does not implement getFacadeAccessor method.'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /** </span><br><span class="line">     * Get the root object behind the facade.</span><br><span class="line">     *</span><br><span class="line">     * @<span class="built_in">return</span> mixed</span><br><span class="line">     */</span><br><span class="line">    public static <span class="keyword">function</span> getFacadeRoot()</span><br><span class="line">    &#123;   </span><br><span class="line">        <span class="built_in">return</span> static::resolveFacadeInstance(static::getFacadeAccessor());</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Resolve the facade root instance from the container.</span><br><span class="line">     *</span><br><span class="line">     * @param  string|object  <span class="variable">$name</span></span><br><span class="line">     * @<span class="built_in">return</span> mixed</span><br><span class="line">     */</span><br><span class="line">    protected static <span class="keyword">function</span> resolveFacadeInstance(<span class="variable">$name</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">return</span> static::<span class="variable">$app</span>-&gt;instances[<span class="variable">$name</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static <span class="keyword">function</span> __callStatic(<span class="variable">$method</span>, <span class="variable">$args</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$instance</span> = static::getFacadeRoot();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (! <span class="variable">$instance</span>) &#123;</span><br><span class="line">            throw new RuntimeException(<span class="string">'A facade root has not been set.'</span>);</span><br><span class="line">        &#125;   </span><br><span class="line"></span><br><span class="line">        switch (count(<span class="variable">$args</span>)) &#123;</span><br><span class="line">            <span class="keyword">case</span> 0:</span><br><span class="line">                <span class="built_in">return</span> <span class="variable">$instance</span>-&gt;<span class="variable">$method</span>();</span><br><span class="line">            <span class="keyword">case</span> 1:</span><br><span class="line">                <span class="built_in">return</span> <span class="variable">$instance</span>-&gt;<span class="variable">$method</span>(<span class="variable">$args</span>[0]);</span><br><span class="line">            <span class="keyword">case</span> 2:</span><br><span class="line">                <span class="built_in">return</span> <span class="variable">$instance</span>-&gt;<span class="variable">$method</span>(<span class="variable">$args</span>[0], <span class="variable">$args</span>[1]);</span><br><span class="line">            <span class="keyword">case</span> 3:</span><br><span class="line">                <span class="built_in">return</span> <span class="variable">$instance</span>-&gt;<span class="variable">$method</span>(<span class="variable">$args</span>[0], <span class="variable">$args</span>[1], <span class="variable">$args</span>[2]);</span><br><span class="line">            <span class="keyword">case</span> 4:</span><br><span class="line">                <span class="built_in">return</span> <span class="variable">$instance</span>-&gt;<span class="variable">$method</span>(<span class="variable">$args</span>[0], <span class="variable">$args</span>[1], <span class="variable">$args</span>[2], <span class="variable">$args</span>[3]);</span><br><span class="line">            default:</span><br><span class="line">                <span class="built_in">return</span> call_user_func_array([<span class="variable">$instance</span>, <span class="variable">$method</span>], <span class="variable">$args</span>);</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中：<br>1、 $app中存放的就是一个IOC容器实例，它是在框架初始化时，通过 setFacadeApplication() 这个静态方法设置的<br>2、 它实现了__callStatic 魔术方法<br>3、 getFacadeAccessor() 方法需要子类去继承，返回一个string的标识，通过这个标识，IOC容器便能返回它所绑定类（框架初始化或其它时刻绑定）的对象<br>4、通过 $instance 调用具体的方法</p>
+<p>我们尝试创建自定义的 Facade,<br>第一步，实现自己类的具体业务逻辑<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">class Test1</span><br><span class="line">&#123;</span><br><span class="line">	public <span class="keyword">function</span> hello()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">"hello world"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第二步，实现自定义类的 Facede<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace facades;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Class Test1</span><br><span class="line"> * @package facades</span><br><span class="line"> *</span><br><span class="line"> * @method static setOverRecommendInfo [设置播放完毕时的回调函数]</span><br><span class="line"> * @method static setHandlerPlayer [明确指定下一首时的执行类]</span><br><span class="line"> */</span><br><span class="line">class Test1Facade extends Facade</span><br><span class="line">&#123;</span><br><span class="line">    protected static <span class="keyword">function</span> getFacadeAccessor()</span><br><span class="line">    &#123;   </span><br><span class="line">        <span class="built_in">return</span> <span class="string">'test1'</span>;</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第三步，使用自定义的 Facade<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">use facades\Test1Facade;</span><br><span class="line"></span><br><span class="line">Test1Facade::hello();  // 这是 Facade 调用</span><br></pre></td></tr></table></figure></p>
+<p>整个过程如下:<br>1、 facades\Test1Facade 调用静态方法 hello() 时，由于没有定义此方法，会调用<strong>callStatic;<br>2、 在</strong>callStatic 中，首先是获取对应的实例，即 return static::$app-&gt;instances[$name];。这其中的 $name，即为 facades\Test1 里的 test1<br>3、 $app， 即为 IOC 容器，类的实例化过程，就交由它来处理。</p>
+<h2 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h2><p>1、 路由组<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Route::group(</span><br><span class="line">	[</span><br><span class="line">		<span class="string">'prefix'</span>=&gt;<span class="string">'admin'</span>,</span><br><span class="line">		<span class="string">'namespace'</span>=&gt;<span class="string">'\App\Admin\Controllers'</span>,</span><br><span class="line">		<span class="string">'middleware'</span>=&gt;<span class="string">'auth:web'</span></span><br><span class="line">	],</span><br><span class="line">	<span class="function"><span class="title">function</span></span>()&#123;</span><br><span class="line">		Route::get(<span class="string">'user/&#123;id&#125;/&#123;name&#125;'</span>, <span class="string">'UserController@show'</span>)-&gt;<span class="built_in">where</span>([<span class="string">'id'</span> =&gt; <span class="string">'[0-9]+'</span>, <span class="string">'name'</span> =&gt; <span class="string">'[a-z]+'</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>将多个Route合并到一个组中，同个组中的Route共享路由组的属性，如：前缀，中间件和命名空间等<br>其中：<br>prefix 前缀：会追加到路由组中每个路由的URI前缀相当于 Route::get(‘/admin/user/{id}/{name}’, ‘UserController@show’);</p>
+<p>namespace namespace：省去了组里每个路由都需要加上命名空间，修改时也方便。该路会访问到\App\Admin\Controllers\UserController@show’。有一点需要注意，使用时需要把RouteServiceProvider里面的$namespace置为空，否则该值会追加在你的路由前面。</p>
+<p>middleware 中间件：是从路由到控制器中间的一个层，可作数据校验和登陆验证等，web.php中默认有csrf等校验，可通过app/Http/Kernel.php中的$middlewareGroups查看。</p>
+<p>参数绑定：参数可以用正则来约束，如果你希望路由参数在全局范围内都遵循一个确定的正则表达式约束，则可以在 RouteServiceProvider 的 boot 方法里定义Route::pattern(‘id’, ‘[0-9]+’);</p>
+<p>2、 资源路由<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::resource(<span class="string">'user'</span>, <span class="string">'UserController'</span>, [<span class="string">'only'</span>=&gt;[<span class="string">'index'</span>,<span class="string">'create'</span>,<span class="string">'store'</span>]]);</span><br></pre></td></tr></table></figure></p>
+<p>用artisan生成控制器时就可以直接生成对应的方法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:controller UserController --resource</span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>动作</th>
+<th>URI</th>
+<th>操作</th>
+<th>路由名称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/users</td>
+<td>index</td>
+<td>users.index</td>
+<td>获取列表数据</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/users/create</td>
+<td>create</td>
+<td>users.create</td>
+<td>创建（显示表单）</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/users</td>
+<td>store</td>
+<td>users.store</td>
+<td>保存创建建数据</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/users/{id}</td>
+<td>show</td>
+<td>users.show</td>
+<td>获取单个id资源数据</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/users/{id}/edit</td>
+<td>edit</td>
+<td>users.edit</td>
+<td>编辑（显示表单）</td>
+</tr>
+<tr>
+<td>PUT/PATCH</td>
+<td>/users/{id}</td>
+<td>update</td>
+<td>users.update</td>
+<td>保存资源修改数据</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>/users/{id}</td>
+<td>destroy</td>
+<td>users.destroy</td>
+<td>提交删除资源</td>
+</tr>
+</tbody>
+</table>
+<p>注意： 由于HTML的form中不支持PUT、TATCH、DELETE提交，所以框架默认将”_method”名字的值作为请求方法，故表单提交时要注意是否需要加入下面元素<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input <span class="built_in">type</span>=<span class="string">"hidden"</span> name=<span class="string">"_method"</span> value=<span class="string">"PUT"</span>&gt;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://luckymartinlee.github.io/2013/06/02/laravel_1-1/" title="Laravel 框架 重难点" target="_blank" rel="external">http://luckymartinlee.github.io/2013/06/02/laravel_1-1/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<!-- <div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://luckymartinlee.github.io" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://luckymartinlee.github.io" target="_blank"><span class="text-dark">Martin Li</span><small class="ml-1x">技术主管，大数据及后端高级研发工程师</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div> -->
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+       
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTc5Ni8xMjMzMg==">
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+      
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2013/06/02/hack_1-1/" title="常见网络攻击和防范"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2013/05/22/mysql_1-3/" title="MySQL -- 索引 一 基本概念"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="wechat,qq,qzone,weibo,linkedin,facebook,twitter" data-mobile-sites="wechat,qq,qzone,weibo"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<!--
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/LuckyMartinLee" target="_blank" title="Github" ><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" ><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+-->
+</footer>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+  
+    
+    
+    
+        <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+    
+    
+    
+        
+
+
+<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-min-1.2.1.js"></script>
+<script>
+AV.init({
+  appId: 'M91o0ht1SkDPElWjppEk1vP3-gzGzoHsz',
+  appKey: 'JyI4oMHuThg8NUNTB9NgN5C3'
+});
+
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+		var visitors= $('.leancloud_visitors');
+		query.greaterThanOrEqualTo("time", 0);		
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {				
+					return;
+				}
+				var data = results;
+				visitors.each(function(){
+					var url = $(this).attr('id').trim();					
+					for (var i = 0; i < data.length; i++) {
+						var object = data[i];
+						var content = object.get('time');
+						var _url = object.get('url')
+						if(url == _url){
+							$(this).text(content);
+						}
+					}
+				})
+				
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+    
+    
+        
+    
+<script defer type="text/javascript">
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+
+    if (typeof LivereTower === 'function') { return; }
+
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+
+    
+    
+
+
+
+</body>
+</html>
